@@ -1,8 +1,9 @@
 const textarea = document.getElementById("textarea");
 const tags = document.getElementById("tags");
 const decide = document.getElementById("button");
-const selectionDelay = 0;
-const currentElasped = 0;
+let intervalFunctionReference;
+let selectionDelay = 0;
+let currentElasped = 0;
 
 textarea.addEventListener("keyup", (e) => {
     const options = e.target.value
@@ -29,15 +30,12 @@ decide.addEventListener("click", () => {
 
 function selectOneRandom() {
     const options = tags.childNodes;
-    selectionDelay = options.length;
+    selectionDelay = options.length * 5;
 
-    const intervalFunction = setInterval(() => {
+    intervalFunctionReference = setInterval(() => {
+        removeAllHighlight(options);
         highlightOneRandomly(options);
-    }, 100);
-
-    if (currentElasped == selectionDelay) {
-        clearInterval(intervalFunction);
-    }
+    }, 50);
 }
 
 function highlightOneRandomly(options) {
@@ -46,4 +44,13 @@ function highlightOneRandomly(options) {
     options[Math.floor(Math.random() * options.length)].classList.add(
         "highlight"
     );
+
+    console.log(currentElasped, selectionDelay);
+    if (currentElasped == selectionDelay) {
+        clearInterval(intervalFunctionReference);
+    }
+}
+
+function removeAllHighlight(options) {
+    options.forEach((option) => option.classList.remove("highlight"));
 }
